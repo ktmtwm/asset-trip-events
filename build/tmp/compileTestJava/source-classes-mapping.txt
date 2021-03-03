@@ -1,0 +1,4 @@
+com/phocas/asset/rest/HelloControllerIT.java
+ com.example.springboot.HelloControllerIT
+com/phocas/asset/rest/HelloControllerTest.java
+ com.example.springboot.HelloControllerTest
