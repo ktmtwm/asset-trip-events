@@ -7,6 +7,9 @@ import com.amazonaws.services.dynamodbv2.model.CreateTableRequest;
 import com.amazonaws.services.dynamodbv2.model.ProvisionedThroughput;
 import com.phocas.asset.rest.model.AssetEvent;
 import com.phocas.asset.rest.repository.AssetRepository;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,6 +20,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
+import java.util.Date;
 import java.util.List;
 
 import static org.assertj.core.internal.bytebuddy.matcher.ElementMatchers.is;
@@ -63,7 +67,17 @@ public class DynamoDBTest {
 
     @Test
     public void givenItemWithExpectedSpeed_whenRunFindAll_thenItemIsFound() {
-        AssetEvent eventInfo = new AssetEvent();
+        DateTimeFormatter dtf = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        DateTime dt = dtf.parseDateTime("2019-01-01T21:47:10Z");
+        Date date = dt.toDate();
+        AssetEvent eventInfo = AssetEvent.builder()
+                                .asset(0)
+                                .trip(0)
+                                .x(172.58148129875363)
+                                .y(-43.533591542067846)
+                                .speed(1.3606179935446998)
+                                .created(date.getTime())
+                                .build();
         repository.save(eventInfo);
         List<AssetEvent> result = (List<AssetEvent>) repository.findAll();
 

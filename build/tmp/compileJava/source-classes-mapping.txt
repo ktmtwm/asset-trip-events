@@ -1,4 +1,0 @@
-com/phocas/asset/rest/Application.java
- com.example.springboot.Application
-com/phocas/asset/rest/HelloController.java
- com.example.springboot.HelloController

@@ -9,7 +9,7 @@ import lombok.Value;
 
 @Value
 @Builder
-@DynamoDBTable(tableName = "Asset")
+@DynamoDBTable(tableName = "AssetEvent")
 public class AssetEvent {
     private int id;
     private int asset;
