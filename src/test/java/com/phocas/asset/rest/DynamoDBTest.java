@@ -10,6 +10,7 @@ import com.phocas.asset.rest.repository.AssetRepository;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -51,6 +52,7 @@ public class DynamoDBTest {
 
     @Before
     public void setup() throws Exception {
+        // TODO control create, using test table
         dynamoDBMapper = new DynamoDBMapper(amazonDynamoDB);
 
         CreateTableRequest tableRequest = dynamoDBMapper
@@ -59,30 +61,28 @@ public class DynamoDBTest {
                 new ProvisionedThroughput(1L, 1L));
         amazonDynamoDB.createTable(tableRequest);
 
-        //...
-
-        dynamoDBMapper.batchDelete(
-                (List<AssetEvent>)repository.findAll());
     }
 
     @Test
     public void givenItemWithExpectedSpeed_whenRunFindAll_thenItemIsFound() {
-        DateTimeFormatter dtf = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        DateTimeFormatter dtf = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
         DateTime dt = dtf.parseDateTime("2019-01-01T21:47:10Z");
         Date date = dt.toDate();
-        AssetEvent eventInfo = AssetEvent.builder()
-                                .asset(0)
-                                .trip(0)
-                                .x(172.58148129875363)
-                                .y(-43.533591542067846)
-                                .speed(1.3606179935446998)
-                                .created(date.getTime())
-                                .build();
+        AssetEvent eventInfo = new AssetEvent(null, 0, 0,
+                                        172.58148129875363, -43.533591542067846,
+                                        1.3606179935446998, date.getTime());
         repository.save(eventInfo);
         List<AssetEvent> result = (List<AssetEvent>) repository.findAll();
 
         // TODO mock data with assert
 //        assertThat(result.size(), is(greaterThan(0)));
 //        assertThat(result.get(0).getSpeed(), is(equalTo(EXPECTED_SPEED)));
+    }
+
+    @After
+    public void clean() throws Exception {
+        dynamoDBMapper.batchDelete(
+                (List<AssetEvent>)repository.findAll());
+
     }
 }
