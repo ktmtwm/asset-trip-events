@@ -12,5 +12,5 @@ import java.util.Optional;
 public interface AssetRepository extends
         CrudRepository<AssetEvent, String> {
 
-    Optional<AssetEvent> findById(String id);
+//    Optional<AssetEvent> findById(String id);
 }

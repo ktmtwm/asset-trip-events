@@ -6,10 +6,9 @@ import com.phocas.asset.rest.repository.AssetRepository;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.Arrays;
-
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Optional;
 
 public class AssetProvider {
     @Resource
@@ -29,13 +28,12 @@ public class AssetProvider {
      * @return
      */
     public List<AssetEvent> getEventAssetDuration(int assetId, long start, long end) {
-//        List<AssetEvent> result = (List<AssetEvent>) repository.fi;
+
         return null;
     }
 
-    public AssetEvent getEventById(int id) {
-        // TODO
-        return null;
+    public Optional<AssetEvent> getEventById(String id) {
+        return repository.findById(id);
     }
 
     public List<AssetEvent> getLastEvent() {

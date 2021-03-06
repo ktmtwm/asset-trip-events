@@ -2,14 +2,13 @@ package com.phocas.asset.rest.service;
 
 import com.phocas.asset.rest.middle.AssetProvider;
 import com.phocas.asset.rest.model.AssetEvent;
-import org.springframework.http.HttpStatus;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.TimeoutException;
+import java.util.Optional;
 
 
 @RestController
@@ -21,7 +20,7 @@ public class EventController {
 
 	@GetMapping("/asset/duration")
 	// TODO add swagger
-//	@ApiOperation("Get list of available event sets")
+	@ApiOperation("Query events with Asset and duration")
 	public List<AssetEvent> getEventAssetDuration(@RequestParam("asset") int asset,
 												  @RequestParam(required=true) Date startT,
 												  @RequestParam(required=true) Date endT) {
@@ -34,9 +33,8 @@ public class EventController {
 	}
 
 	@GetMapping("/id")
-	public AssetEvent getEventById(@RequestParam("id") int id) {
-		assetProvider.getEventById(id);
-		return null;
+	public Optional<AssetEvent> getEventById(@RequestParam("id") String id) {
+		return assetProvider.getEventById(id);
 	}
 
 	@GetMapping("/last")
