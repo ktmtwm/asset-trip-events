@@ -1,5 +1,6 @@
 package com.phocas.asset.rest;
 
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -21,7 +22,7 @@ public class AssetEventControllerTest {
 	private MockMvc mvc;
 
 	@Test
-	public void getEventAssetDuration() throws Exception {
+	public void TestGetEventAssetDuration() throws Exception {
 		int asset = 0;
 		// TODO pass with param
 		mvc.perform(MockMvcRequestBuilders.get(String.format("/event/asset/duration"))
@@ -32,18 +33,17 @@ public class AssetEventControllerTest {
 	}
 
 	@Test
-	public void getEventById() throws Exception {
-		int id = 0;
-		// TODO pass with param
-		mvc.perform(MockMvcRequestBuilders.get(String.format("/event/id"))
+	public void TestGetEventById() throws Exception {
+		String id = "e13c0bba-1357-4cff-8abc-22a249068dab";
+		mvc.perform(MockMvcRequestBuilders.get(String.format("/event/id?id=%s", id))
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
-				// TODO mock data with assert
-				.andExpect(content().string(equalTo("")));
+				// TODO mock data insert and remove
+				.andExpect(content().string(containsString(id)));
 	}
 
 	@Test
-	public void getLastEvent() throws Exception {
+	public void TestGetLastEvent() throws Exception {
 		mvc.perform(MockMvcRequestBuilders.get(String.format("/event/last"))
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
@@ -52,7 +52,7 @@ public class AssetEventControllerTest {
 	}
 
 	@Test
-	public void getEventAssetTrip() throws Exception {
+	public void TestGetEventAssetTrip() throws Exception {
 		int asset = 0;
 		int trip = 0;
 		// TODO pass with param

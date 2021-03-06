@@ -31,7 +31,7 @@ public class AssetEventControllerIT {
     }
 
     @Test
-    public void getEventAssetDuration() throws Exception {
+    public void TestGetEventAssetDuration() throws Exception {
         int asset = 0;
         ResponseEntity<AssetEvent> response = template.getForEntity(
                 // TODO pass with param
@@ -42,18 +42,17 @@ public class AssetEventControllerIT {
     }
 
     @Test
-    public void getEventById() throws Exception {
-        int id = 0;
+    public void TestGetEventById() throws Exception {
+        String id = "e13c0bba-1357-4cff-8abc-22a249068dab";
         ResponseEntity<AssetEvent> response = template.getForEntity(
-                // TODO pass with param
-                String.format("%s/event/id", base.toString()),
+                String.format("%s/event/id?id=%s", base.toString(), id),
                 AssetEvent.class);
-        // TODO mock data with assert
-        assertThat(response.getBody()).isEqualTo(null);
+        // TODO mock data insert and remove
+        assertThat(response.getBody().getId()).isEqualTo(id);
     }
 
     @Test
-    public void getLastEvent() throws Exception {
+    public void TestGetLastEvent() throws Exception {
         ResponseEntity<AssetEvent> response = template.getForEntity(
                 String.format("%s/event/last", base.toString()),
                 AssetEvent.class);
@@ -62,7 +61,7 @@ public class AssetEventControllerIT {
     }
 
     @Test
-    public void getEventAssetTrip() throws Exception {
+    public void TestGetEventAssetTrip() throws Exception {
         int asset = 0;
         int trip = 0;
         ResponseEntity<AssetEvent> response = template.getForEntity(

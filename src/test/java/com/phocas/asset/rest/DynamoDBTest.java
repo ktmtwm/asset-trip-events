@@ -7,11 +7,15 @@ import com.amazonaws.services.dynamodbv2.model.CreateTableRequest;
 import com.amazonaws.services.dynamodbv2.model.ProvisionedThroughput;
 import com.phocas.asset.rest.model.AssetEvent;
 import com.phocas.asset.rest.repository.AssetRepository;
+import org.assertj.core.api.Assertions;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +25,8 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
+import java.io.*;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -52,15 +58,25 @@ public class DynamoDBTest {
 
     @Before
     public void setup() throws Exception {
-        // TODO control create, using test table
         dynamoDBMapper = new DynamoDBMapper(amazonDynamoDB);
+    }
 
+    @Ignore
+    @Test
+    public void TestCreateTable() {
         CreateTableRequest tableRequest = dynamoDBMapper
                 .generateCreateTableRequest(AssetEvent.class);
         tableRequest.setProvisionedThroughput(
                 new ProvisionedThroughput(1L, 1L));
         amazonDynamoDB.createTable(tableRequest);
+    }
 
+    @Ignore
+    @Test
+    public void TestBatchLoadData() throws IOException {
+        dynamoDBMapper.batchSave(loadDataFile("/Users/tanwenmin/code/github/phocas/data.json"));
+        List<AssetEvent> result = (List<AssetEvent>) repository.findAll();
+        Assertions.assertThat(result.size()).isEqualTo(64735);
     }
 
     @Test
@@ -72,17 +88,69 @@ public class DynamoDBTest {
                                         172.58148129875363, -43.533591542067846,
                                         1.3606179935446998, date.getTime());
         repository.save(eventInfo);
-        List<AssetEvent> result = (List<AssetEvent>) repository.findAll();
 
-        // TODO mock data with assert
+        List<AssetEvent> result = (List<AssetEvent>) repository.findAll();
+//         TODO mock data with assert
 //        assertThat(result.size(), is(greaterThan(0)));
 //        assertThat(result.get(0).getSpeed(), is(equalTo(EXPECTED_SPEED)));
     }
 
-    @After
-    public void clean() throws Exception {
-        dynamoDBMapper.batchDelete(
-                (List<AssetEvent>)repository.findAll());
-
+    @Ignore
+    @Test
+    public void TestCleanTableData() {
+        // clean all data in table
+        dynamoDBMapper.batchDelete(repository.findAll());
+        List<AssetEvent> result = (List<AssetEvent>) repository.findAll();
+        Assertions.assertThat(result.size()).isEqualTo(0);
     }
+
+    @After
+    public void after(){
+    }
+
+    /**
+     *  Load all data in file
+     * @param fname
+     * @return
+     * @throws IOException
+     */
+    private List<AssetEvent> loadDataFile(String fname) throws IOException {
+        File file = new File(fname);
+        BufferedReader br = new BufferedReader(new FileReader(file));
+        String st;
+
+        List<AssetEvent> result = new ArrayList<>();
+        while ((st = br.readLine()) != null) {
+            AssetEvent one = conToAssetEvent(st);
+            if (one != null) {
+                result.add(one);
+            }
+        }
+        return result;
+    }
+
+    /**
+     *  Convert from String to AssetEvent Obj
+     * @param st
+     * @return
+     */
+    private AssetEvent conToAssetEvent(String st) {
+        JSONObject obj;
+        try {
+            obj = new JSONObject(st);
+
+            DateTimeFormatter dtf = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
+            DateTime dt = dtf.parseDateTime(obj.getString("createdAt"));
+            Date date = dt.toDate();
+
+            AssetEvent eventInfo = new AssetEvent(null, obj.getInt("asset"), obj.getInt("trip"),
+                    obj.getDouble("x"), obj.getDouble("y"),
+                    obj.getDouble("speed"), date.getTime());
+            return eventInfo;
+
+        } catch(JSONException ex) {
+            return null;
+        }
+    }
+
 }
