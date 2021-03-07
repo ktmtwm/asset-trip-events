@@ -1,0 +1,63 @@
+{
+    "Table": {
+        "AttributeDefinitions": [
+            {
+                "AttributeName": "id",
+                "AttributeType": "S"
+            },
+            {
+                "AttributeName": "asset",
+                "AttributeType": "N"
+            },
+            {
+                "AttributeName": "created",
+                "AttributeType": "S"
+            }
+        ],
+        "TableName": "AssetEvent",
+        "KeySchema": [
+            {
+                "AttributeName": "id",
+                "KeyType": "HASH"
+            }
+        ],
+        "TableStatus": "ACTIVE",
+        "CreationDateTime": "2021-03-07T21:05:06.528000+13:00",
+        "ProvisionedThroughput": {
+            "LastIncreaseDateTime": "1970-01-01T12:00:00+12:00",
+            "LastDecreaseDateTime": "1970-01-01T12:00:00+12:00",
+            "NumberOfDecreasesToday": 0,
+            "ReadCapacityUnits": 1,
+            "WriteCapacityUnits": 1
+        },
+        "TableSizeBytes": 7456896,
+        "ItemCount": 64736,
+        "TableArn": "arn:aws:dynamodb:ddblocal:000000000000:table/AssetEvent",
+        "GlobalSecondaryIndexes": [
+            {
+                "IndexName": "GSI-AssetLastIndex",
+                "KeySchema": [
+                    {
+                        "AttributeName": "asset",
+                        "KeyType": "HASH"
+                    },
+                    {
+                        "AttributeName": "created",
+                        "KeyType": "RANGE"
+                    }
+                ],
+                "Projection": {
+                    "ProjectionType": "ALL"
+                },
+                "IndexStatus": "ACTIVE",
+                "ProvisionedThroughput": {
+                    "ReadCapacityUnits": 10,
+                    "WriteCapacityUnits": 10
+                },
+                "IndexSizeBytes": 7456896,
+                "ItemCount": 64736,
+                "IndexArn": "arn:aws:dynamodb:ddblocal:000000000000:table/AssetEvent/index/GSI-AssetLastIndex"
+            }
+        ]
+    }
+}
