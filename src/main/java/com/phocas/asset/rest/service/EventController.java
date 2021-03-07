@@ -28,7 +28,7 @@ public class EventController {
 	@Resource
 	private Logger logger;
 
-	@GetMapping("/asset/duration")
+	@PostMapping("/asset/duration")
 	// TODO add swagger
 	@ApiOperation("Query events with Asset and duration")
 	public List<AssetEvent> getEventAssetDuration(@RequestParam("asset") int asset,
@@ -43,7 +43,7 @@ public class EventController {
 		return result;
 	}
 
-	@GetMapping("/id")
+	@PostMapping("/id")
 	public Optional<AssetEvent> getEventById(@RequestParam("id") String id) {
 		try {
 			return assetProvider.getEventById(id);
@@ -52,7 +52,7 @@ public class EventController {
 		}
 	}
 
-	@GetMapping("/last")
+	@PostMapping("/last")
 	public List<AssetEvent> getLastEvent() {
 		try {
 			assetProvider.getLastEvent();
@@ -62,7 +62,7 @@ public class EventController {
 		return null;
 	}
 
-	@GetMapping("/asset/trip")
+	@PostMapping("/asset/trip")
 	public List<AssetEvent> getEventAssetTrip(@RequestParam("asset") int asset,
 											  @RequestParam("trip") int trip) {
 		List<AssetEvent> result = null;
