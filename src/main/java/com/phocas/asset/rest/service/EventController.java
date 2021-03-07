@@ -45,20 +45,33 @@ public class EventController {
 
 	@GetMapping("/id")
 	public Optional<AssetEvent> getEventById(@RequestParam("id") String id) {
-		return assetProvider.getEventById(id);
+		try {
+			return assetProvider.getEventById(id);
+		} catch (AmazonDynamoDBException e) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+		}
 	}
 
 	@GetMapping("/last")
 	public List<AssetEvent> getLastEvent() {
-		assetProvider.getLastEvent();
+		try {
+			assetProvider.getLastEvent();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return null;
 	}
 
 	@GetMapping("/asset/trip")
-	public AssetEvent getEventAssetTrip(@RequestParam("asset") int asset,
-										@RequestParam("trip") int trip) {
-		assetProvider.getEventAssetTrip(asset, trip);
-		return null;
+	public List<AssetEvent> getEventAssetTrip(@RequestParam("asset") int asset,
+											  @RequestParam("trip") int trip) {
+		List<AssetEvent> result = null;
+		try {
+			result = assetProvider.getEventAssetTrip(asset, trip);
+		} catch (AmazonDynamoDBException e) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+		}
+		return result;
 	}
 
 }
