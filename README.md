@@ -7,6 +7,11 @@
 |                       |                                       |   select with ScanIndexForward(false) && MaxResultSize(1)|
 | /event/asset/trip    	|    	asset, trip			                  |  	Scan with FilterExpression                             |
 
+
+### Table Describ in 
+
+	table_AssetEvent_describe
+
 ### View Api server with:
 ##### * Get events with asset and duration:
 		http://<ip>/event/asset/duration
